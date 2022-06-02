@@ -5,6 +5,16 @@ Dies ist das Repository für die Projektarbeit im Modul "Frameworks, Daten und D
 
 ***
 
+## Bisherige Projektideen
+
+### 1. Karten- oder Würfelspiel
+Ein Multiplayer-Spiel, das auf einem bereits bestehenden Karten oder Würfelspiel basiert.
+
+### 2. Chatsystem
+Mehrere Chaträume, in denen sich die Chat-Teilnehmer anmelden und Nachrichten austauschen können.
+
+***
+
 Projektteam: 
 * Anton Berg 
 * Abdurrahman Karakan
