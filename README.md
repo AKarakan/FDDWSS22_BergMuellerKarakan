@@ -7,5 +7,5 @@ Dies ist das Repository für die Projektarbeit im Modul "Frameworks, Daten und D
 
 Projektteam: 
 * Anton Berg 
-* Abdu Karakan
+* Abdurrahman Karakan
 * Yasha Müller
