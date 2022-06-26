@@ -1,5 +1,10 @@
 # Frameworks, Dienste und Daten im Web (FDDW)
 
+***
+***
+
+# Teil I: Erste Ideen
+
 ## Beschreibung
 
 Dies ist das Repository für die Projektarbeit im Modul "Frameworks, Daten und Dienste im Web" (FDDW) im Rahmen des Schwerpunktbereichs "Web Development". Alle Inhalte bezüglich der Konzeption und Umsetzung werden hier hochgeladen.
@@ -36,6 +41,13 @@ Ein Chatraum pro Spielraum, in denen sich die Chat-Teilnehmer anmelden und Nachr
 * Externer (offener) Datendienst: Fosscord, oder Eigenbau mit socket.io
 
 ***
+***
+
+# Teil II: Auspezifizierung der Ideen & Konzeption
+
+# Auswahl des Spiels
+
+Für das Auswahl des betreffenden Spiels haben wir uns in der weiteren Konzeption für das Würfelspiel "Mäxchen" entschieden, da es sowohl eine einfache Spielmechanik mit klaren Regeln aufweist und darüber hinaus von der Interaktion der Spieler lebt, wodurch der geplante Chat auch im Spiel selbst an Bedeutung gewinnt. 
 
 Projektteam:
 
