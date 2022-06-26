@@ -43,12 +43,11 @@ Ein Chatraum pro Spielraum, in denen sich die Chat-Teilnehmer anmelden und Nachr
 ***
 ***
 
-
 # Teil II: Auspezifizierung der Ideen & Konzeption
 
 ## Auswahl des Spiels
 
-Für das Auswahl des betreffenden Spiels haben wir uns in der weiteren Konzeption für das Würfelspiel "Mäxchen" entschieden, da es sowohl eine einfache Spielmechanik mit klaren Regeln aufweist und darüber hinaus von der Interaktion der Spieler lebt, wodurch der geplante Chat auch im Spiel selbst an Bedeutung gewinnt. 
+Für das Auswahl des betreffenden Spiels haben wir uns in der weiteren Konzeption für das Würfelspiel "Mäxchen" entschieden, da es sowohl eine einfache Spielmechanik mit klaren Regeln aufweist und darüber hinaus von der Interaktion der Spieler lebt, wodurch der geplante Chat auch im Spiel selbst an Bedeutung gewinnt. ( [Eine kleine Erkärung zum Spiel.](https://www.abenteuerfreundschaft.de/wuerfelspiel-maexchen/) )
 
 ***
 
