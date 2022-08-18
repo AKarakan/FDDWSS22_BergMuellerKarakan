@@ -1,23 +1,23 @@
 class Spieltisch{
-    constructor(letzterWuerfelWert, behauptung, aktWert){
-        this.letzterWuerfelWert = letzterWuerfelWert
-        this.behauptung = behauptung
-        this.aktWert = aktWert
+    constructor(newLetzterWuerfelWert, newBehauptung, newAktWert){
+        this.letzterWuerfelWert = newLetzterWuerfelWert
+        this.behauptung = newBehauptung
+        this.aktWert = newAktWert
     }
 
     get letzterWuerfelWert() {return this.letzterWuerfelWert}
     get behauptung() {return this.behauptung}
-    get aktWert() {return this.aktWert}
+    get aktWert() {return this._aktWert}
     
-    set letzterWuerfelWert(x) {
-        this.letzterWuerfelWert = x;
+    set letzterWuerfelWert( newLetzterWuerfelWert) {
+        this._letzterWuerfelWert = newLetzterWuerfelWert
     }
-    set behauptung(val) {
-        this.behauptung = val
+    set behauptung(newBehauptung) {
+        this._behauptung = newBehauptung
     }
-    set aktWert(val) {
-        this.letzterWuerfelWert = this.aktWert
-        this.aktWert = val
+    set aktWert(newAktWert) {
+        this._letzterWuerfelWert = this.aktWert
+        this._aktWert = newAktWert
     }
 
 }
