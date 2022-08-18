@@ -5,28 +5,78 @@ Player {
 }
 
 Game {
+    //dice variables
     variable dice_array [31, 32, 41 .. 55, 66, 21]
     variable current_dice_value: Int
+    variable claimed_dice_value: Int
+
+    //player variables
+    variable player_array [player_01.token, player_02.token, ... ]
     variable current_player: Player.token
     variable last_player: Player.token
-    variable claimed_dice_value: Int
- 
-    function trust_and_roll_dices {
+    variable last_player_action: player_action
+    
+    //game variables
+    variable player_action[]
+    variable frontend_options[trust_option: boolean, claim_option: boolean, roll_dice_option: boolean]
+
+
+    function show_options(){
+
+    }
+
+    // PLAYER ACTIONS ====================
+
+    function claim() {
+        value = USER-INPUT
+        claimed_dice_value = value
+    }
+
+    function roll_dice() {
         new_dice_value = random(dice_array)
         current_dice_value = new_dice_value
+        claim()
+    }
+
+    function trust_and_roll_dices {
+        roll_dice()
+        next_player()
     }
 
     function dont_trust {
+        compare()
+        roll_dice()
+        next_player
+    }
+
+
+    // GAME ACTIONS ======================
+ 
+    function next_player() {
+        last_player = current_player
+        if (current_player != player_array[last]) {
+            current_player = player_array[current++]
+        }
+        else {
+            current_player = player_array[first]
+        }
+        show_options()
+    }
+
+    function compare() {
         if (current_dice_value != claimed_dice_value) {
             for player with last_player.token {
                 Player.score --
+                if (Player.score == 0) {
+                    delete Player.token in from player_array 
+                }
             }
         }
         else {
             for player with current_player.token {
-                Player.score --
+                Player.score--
             }
         }
     }
 
-}
+    
