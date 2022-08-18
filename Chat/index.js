@@ -23,6 +23,10 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('gameEvent', (msg) => {
+        console.log(msg)
+    })
+
     socket.on('disconnect', ()=>{
         console.log("User disconnected");
     })
