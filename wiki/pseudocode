@@ -1,0 +1,32 @@
+Player {
+    variable name: String
+    variable token: String
+    variable score: Int
+}
+
+Game {
+    variable dice_array [31, 32, 41 .. 55, 66, 21]
+    variable current_dice_value: Int
+    variable current_player: Player.token
+    variable last_player: Player.token
+    variable claimed_dice_value: Int
+ 
+    function trust_and_roll_dices {
+        new_dice_value = random(dice_array)
+        current_dice_value = new_dice_value
+    }
+
+    function dont_trust {
+        if (current_dice_value != claimed_dice_value) {
+            for player with last_player.token {
+                Player.score --
+            }
+        }
+        else {
+            for player with current_player.token {
+                Player.score --
+            }
+        }
+    }
+
+}
