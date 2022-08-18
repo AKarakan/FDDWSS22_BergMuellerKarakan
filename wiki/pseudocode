@@ -2,6 +2,14 @@ Player {
     variable name: String
     variable token: String
     variable score: Int
+
+    function show_options(){
+        case (last_game_action) {
+            "trusted_or_compared": frontend_options = [true, false, false] 
+            "you_rolled_dice": frontend_options = [false, true, false]
+            "last_player_rolled_dice": frontend_options = [false, false, true]
+        }
+    }
 }
 
 Game {
@@ -14,16 +22,11 @@ Game {
     variable player_array [player_01.token, player_02.token, ... ]
     variable current_player: Player.token
     variable last_player: Player.token
-    variable last_player_action: player_action
+    variable last_game_action: game_action
     
     //game variables
-    variable player_action[]
-    variable frontend_options[trust_option: boolean, claim_option: boolean, roll_dice_option: boolean]
-
-
-    function show_options(){
-
-    }
+    variable game_action["last_player_rolled_dice", "you_rolled_dice"]
+    variable frontend_options[roll_dice_option: boolean,  claim_option: boolean, trust_option: boolean]
 
     // PLAYER ACTIONS ====================
 
