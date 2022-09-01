@@ -105,3 +105,4 @@ dist
 
 # nodemon config file
 Game/nodemon.json
+Chat/nodemon.json
