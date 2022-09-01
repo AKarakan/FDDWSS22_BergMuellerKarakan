@@ -86,5 +86,13 @@
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
   });
+    socket.on('game event', function(msg) {
+        var item = document.createElement('li');
+        item.className = "gameEvent"
+        item.style.cssText =  "border: solid 1px red;"
+        item.textContent = msg;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+  });
 </script>
 </html>
