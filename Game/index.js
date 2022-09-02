@@ -19,13 +19,12 @@ let spielTisch = {
   aktSpieler: null,
   lastSpieler: null,
   
-  set aktWuerfelWert(val){
+  setAktWuerfelWert(val){
     this.letzterWuerfelWert = this.aktWuerfelWert
-    aktWuerfelWert = val
+    this.aktWuerfelWert = val
   },
-  get aktWuerfelWert() {return aktWuerfelWert},
 
-  set behauptung(val){
+  setBehauptung(val){
     this.letzteBehauptung = this.aktBehauptung
     this.aktBehauptung = val
   },
@@ -38,18 +37,18 @@ let spielTisch = {
   },
   
   nextPlayer(){
-    lastSpieler = aktSpieler;
-    aktSpieler = spielerAmTisch[(spielerAmTisch.findIndex((spieler)=> spieler == aktSpieler)+1) % spielerAmTisch.length];
+    this.lastSpieler = this.aktSpieler;
+    this.aktSpieler = spielerAmTisch[(spielerAmTisch.findIndex((spieler)=> spieler == spielTisch.aktSpieler)+1) % spielerAmTisch.length];
   },
 
   //dev only
   show(){
-    console.log("Letzter Würfelwert " + this.letzterWuerfelWert)
-    console.log("akttueller Würfelwert "+ this.aktWuerfelWert)
-    console.log("letzte Behauptung "+ this.letzteBehauptung)
-    console.log("aktuelle behauptung "+ this.aktBehauptung)
-    console.log("letzter Spieler "+ this.lastSpieler)
-    console.log("Aktueller Spieler"+ this.aktSpieler)
+    return "Letzter Würfelwert " + this.letzterWuerfelWert+ " | "+ 
+    "akttueller Würfelwert "+ this.aktWuerfelWert+" | "+ 
+    "letzte Behauptung "+ this.letzteBehauptung+" | "+ 
+    "aktuelle behauptung "+ this.aktBehauptung+" | "+ 
+    "letzter Spieler "+ this.lastSpieler.spielername+" | "+ 
+    "Aktueller Spieler "+ this.aktSpieler.spielername+" | "
   }
 
 }
@@ -69,10 +68,16 @@ game.post('/join',(req,res) => {
 })
 
 game.post('/start', (req, res) => {
+
+  //test zwecken 3 falsche Spieler
+  spielerAmTisch.push(new Spieler("Yasha",50, "a"))
+  spielerAmTisch.push(new Spieler("Anton",50, "b"))
+  spielerAmTisch.push(new Spieler("Abdu",50, "c"))
+
   if(spielerAmTisch.length < 3){
     res
     .status(409)
-    .send({"message": "Das Spiel kann nicht gestartet werden. Es sind nicht genügend Spieler anwesend!"})
+    .send({"message": "Das Spiel kann nicht gestartet werden. Es sind nicht genügend Spieler anwesend! "})
   }
   else{
     spielGestartet = true
@@ -83,69 +88,79 @@ game.post('/start', (req, res) => {
     
     res
     .status(200)
-    .send({"message": "Das Spiel startet!"})
+    .send({"message": "Das Spiel startet! Spieler: "+ spielTisch.aktSpieler.spielername+" ist dran!"})
   }
 })
 
 game.post('/wuerfeln',(req,res)=>{
-  spielTisch.aktWuerfelWert = wuerfelWerte[Math.floor((Math.random() * wuerfelWerte.length))];
+  let x = wuerfelWerte[Math.floor((Math.random() * wuerfelWerte.length))]
+  console.log("wuerfel wert: "+x)
 
+  spielTisch.setAktWuerfelWert(x)
   res.status(200).send({"message": "Du hast "+ spielTisch.aktWuerfelWert + "gewürfelt",
   "wuerfelwert": spielTisch.aktWuerfelWert})
 })
 
 game.post('/behaupten',(req,res)=>{
-  spielTisch.aktBehauptung = req.body.behauptung
-  res.status(200).send({"message": "Du hast "+ req.body.behauptung + " gesagt!"})
+  console.log(req.body.behauptung)
+  spielTisch.setBehauptung(req.body.behauptung)
+  let outputMessage =  "Spieler "+spielTisch.aktSpieler.spielername + " hat " + spielTisch.aktBehauptung + " gesagt! "
   spielTisch.nextPlayer();
+  outputMessage += "Spieler "+spielTisch.aktSpieler.spielername + " ist nun dran!"
+  res.status(200).send({"message": outputMessage})
 })
 
-game.post('/dontTrust',(req,res)=>{
-
-  spielTisch.aktBehauptung = req.body.behauptung
+game.post('/challenge',(req,res)=>{
+  spielTisch.setBehauptung(req.body.behauptung)
   let index = wuerfelWerte.indexOf(spielTisch.aktBehauptung)
-  let lastWuerfelWertIndex = wuerfelWerte.indexOf(spielTisch.letzteBehauptung)
+  let lastWuerfelWertIndex = wuerfelWerte.indexOf(spielTisch.letzterWuerfelWert)
+  let output = ""
 
   if (index>lastWuerfelWertIndex) {
-    console.log(aktSpieler.spielername + " verliert 10 punkte")
+    output = aktSpieler.spielername + " verliert 10 punkte"
     spielerAmTisch[spielerAmTisch.indexOf(aktSpieler)].punkte -= 10 
 
     //hat der aktuelle spieler verloren?
     if(spielerAmTisch[spielerAmTisch.indexOf(aktSpieler)].punkte <= 0){
       //ja
       spielerAmTisch.splice(spielerAmTisch.indexOf(aktSpieler),1)
-      console.log(aktSpieler.spielername+ " hat verloren und hat das spiel verlassen")
+      output = aktSpieler.spielername+ " hat verloren und hat das spiel verlassen"
       spielTisch.nextPlayer()
     }
   }
   else{
-    spielerAmTisch[spielerAmTisch.indexOf(lastSpieler)].punkte -= 10
-    console.log(lastSpieler.spielername + " verliert 10 punkte")
+    spielerAmTisch[spielerAmTisch.indexOf(spielTisch.lastSpieler)].punkte -= 10
+    output = spielTisch.lastSpieler.spielername + " verliert 10 punkte"
 
     //hat der letzte spieler verloren?
-    if(ielerAmTisch[spielerAmTisch.indexOf(lastSpieler)].punkte <= 10 ){
+    if(spielerAmTisch[spielerAmTisch.indexOf(spielTisch.lastSpieler)].punkte <= 10 ){
       //ja
-      spielerAmTisch.splice(spielerAmTisch.indexOf(lastSpieler),1)
-      console.log(lastSpieler.spielername)
+      spielerAmTisch.splice(spielerAmTisch.indexOf(spielTisch.lastSpieler),1)
+      output += ". Spieler "+spielTisch.lastSpieler.spielername+" hat verloren und wurde entfernt!"
       spielTisch.nextPlayer()
+      output += " Nächster Spieler ist: " +spielTisch.aktSpieler.spielername
     }
   } 
   spielTisch.reset()
-
-  res.redirect('/wuerfeln')
+  console.log(spielerAmTisch)
+  res.status(200).send({"message": output})
   
 })
 
 game.get('/aktStand',(req,res)=>{
-  let str = "Letzter Würfelwert: " + this.letzterWuerfelWert +
-  " | akttueller Würfelwert: "+ this.aktWuerfelWert+
-  " | letzte Behauptung: "+ this.letzteBehauptung+
-  " | aktuelle behauptung: "+ this.aktBehauptung+
-  " | letzter Spieler: "+ this.lastSpieler+
-  " | Aktueller Spieler: "+ this.aktSpieler
+  let str = spielTisch.show()
+  console.log(str)
 
   res.status(200).send({"message": str})
  
+})
+
+game.get('/aktPunkte',(req,res)=>{
+  let output = ""
+  for (i in spielerAmTisch){
+    output += "Spieler: " + spielerAmTisch[i].spielername +", Punkte: " +spielerAmTisch[i].punkte +" | "
+  }
+  res.status(200).send({"message": output})
 })
 
 game.listen(port, ()=>{console.log("server läuft auf port: " + port);})
