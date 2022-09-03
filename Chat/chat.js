@@ -12,6 +12,7 @@ app.engine('handlebars', ehbs.engine({layoutsDir: __dirname+"/views/layouts"}));
 // app.set('views', './views');
 
 app.get("/", (req,res) =>{
+    console.log(req.query)
     res.render('spieler',{spielername:"Test"});
 })
 
