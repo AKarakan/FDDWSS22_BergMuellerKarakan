@@ -55,24 +55,30 @@ let spielTisch = {
 
 game.post('/join',(req,res) => {
   if(spielGestartet == true) {
+    console.log("Spiel bereits gestartet. Kein Betritt möglich!")
     res
     .status(403)
     .send({"message": "Spiel bereits gestartet. Kein Betritt möglich!"})
   }
   else{
-    spielerAmTisch.push(new Spieler(req.body.username,50, req.body.token))
+    //req.body.behauptung weil die function in chat.js das sendet
+    //und ich hatte keine lust nur wegen einem keyword eine neue function zu schreiben
+    let spielername = req.body.behauptung
+    spielerAmTisch.push(new Spieler(spielername,50, "Token Hier"))
+    console.log("Spieler/in "+ spielername + " nimm jetzt am Spiel teil")
+    console.log(spielerAmTisch)
     res
     .status(200)
-    .send({"message": "Spieler/in "+ req.body.username + " nimm jetzt am Spiel teil"})
+    .send({"message": "Spieler/in "+ spielername + " nimm jetzt am Spiel teil"})
   }
 })
 
 game.post('/start', (req, res) => {
 
   //test zwecken 3 falsche Spieler
-  spielerAmTisch.push(new Spieler("Yasha",50, "a"))
-  spielerAmTisch.push(new Spieler("Anton",50, "b"))
-  spielerAmTisch.push(new Spieler("Abdu",50, "c"))
+  // spielerAmTisch.push(new Spieler("Yasha",50, "a"))
+  // spielerAmTisch.push(new Spieler("Anton",50, "b"))
+  // spielerAmTisch.push(new Spieler("Abdu",50, "c"))
 
   if(spielerAmTisch.length < 3){
     res
@@ -93,57 +99,80 @@ game.post('/start', (req, res) => {
 })
 
 game.post('/wuerfeln',(req,res)=>{
-  let x = wuerfelWerte[Math.floor((Math.random() * wuerfelWerte.length))]
-  console.log("wuerfel wert: "+x)
-
-  spielTisch.setAktWuerfelWert(x)
-  res.status(200).send({"message": "Du hast "+ spielTisch.aktWuerfelWert + "gewürfelt",
-  "wuerfelwert": spielTisch.aktWuerfelWert})
+  //ist der Spieler dran?
+  if(req.body.spielername == spielTisch.aktSpieler.spielername){
+    //ja, ist dran
+    let x = wuerfelWerte[Math.floor((Math.random() * wuerfelWerte.length))]
+    console.log("wuerfel wert: "+x)
+  
+    spielTisch.setAktWuerfelWert(x)
+    res.status(200).send({"message": "Du hast "+ spielTisch.aktWuerfelWert + "gewürfelt",
+    "wuerfelwert": spielTisch.aktWuerfelWert})
+  }
+  else{
+    //nein, ist nicht dran
+    res.status(401).send("Du bist gerade nicht an der Reihe! "+ spielTisch.aktSpieler.spielername+ " ist an der Reihe!")
+  }
 })
 
 game.post('/behaupten',(req,res)=>{
-  console.log(req.body.behauptung)
-  spielTisch.setBehauptung(req.body.behauptung)
-  let outputMessage =  "Spieler "+spielTisch.aktSpieler.spielername + " hat " + spielTisch.aktBehauptung + " gesagt! "
-  spielTisch.nextPlayer();
-  outputMessage += "Spieler "+spielTisch.aktSpieler.spielername + " ist nun dran!"
-  res.status(200).send({"message": outputMessage})
+  //ist der Spieler dran?
+  if(req.body.spielername == spielTisch.aktSpieler.spielername){
+    //ja, ist dran
+    spielTisch.setBehauptung(req.body.behauptung)
+    let outputMessage =  "Spieler "+spielTisch.aktSpieler.spielername + " hat " + spielTisch.aktBehauptung + " gesagt! "
+    spielTisch.nextPlayer();
+    outputMessage += "Spieler "+spielTisch.aktSpieler.spielername + " ist nun dran!"
+    res.status(200).send({"message": outputMessage})
+  }
+  else{
+    //nein ist nicht dran
+    res.status(401).send("Du bist gerade nicht an der Reihe! "+ spielTisch.aktSpieler.spielername+ " ist an der Reihe!")
+  }
 })
 
 game.post('/challenge',(req,res)=>{
-  spielTisch.setBehauptung(req.body.behauptung)
-  let index = wuerfelWerte.indexOf(spielTisch.aktBehauptung)
-  let lastWuerfelWertIndex = wuerfelWerte.indexOf(spielTisch.letzterWuerfelWert)
-  let output = ""
+  //ist der Spieler dran?
+  if(req.body.spielername == spielTisch.aktSpieler.spielername){
+    //ja, ist dran
+    spielTisch.setBehauptung(req.body.behauptung)
+    let index = wuerfelWerte.indexOf(spielTisch.aktBehauptung)
+    let lastWuerfelWertIndex = wuerfelWerte.indexOf(spielTisch.letzterWuerfelWert)
+    let output = ""
 
-  if (index>lastWuerfelWertIndex) {
-    output = aktSpieler.spielername + " verliert 10 punkte"
-    spielerAmTisch[spielerAmTisch.indexOf(aktSpieler)].punkte -= 10 
+    if (index>lastWuerfelWertIndex) {
+      output = aktSpieler.spielername + " verliert 10 punkte"
+      spielerAmTisch[spielerAmTisch.indexOf(aktSpieler)].punkte -= 10 
 
-    //hat der aktuelle spieler verloren?
-    if(spielerAmTisch[spielerAmTisch.indexOf(aktSpieler)].punkte <= 0){
-      //ja
-      spielerAmTisch.splice(spielerAmTisch.indexOf(aktSpieler),1)
-      output = aktSpieler.spielername+ " hat verloren und hat das spiel verlassen"
-      spielTisch.nextPlayer()
+      //hat der aktuelle spieler verloren?
+      if(spielerAmTisch[spielerAmTisch.indexOf(aktSpieler)].punkte <= 0){
+        //ja
+        spielerAmTisch.splice(spielerAmTisch.indexOf(aktSpieler),1)
+        output = aktSpieler.spielername+ " hat verloren und hat das spiel verlassen"
+        spielTisch.nextPlayer()
+      }
     }
+    else{
+      spielerAmTisch[spielerAmTisch.indexOf(spielTisch.lastSpieler)].punkte -= 10
+      output = spielTisch.lastSpieler.spielername + " verliert 10 punkte"
+
+      //hat der letzte spieler verloren?
+      if(spielerAmTisch[spielerAmTisch.indexOf(spielTisch.lastSpieler)].punkte <= 10 ){
+        //ja
+        spielerAmTisch.splice(spielerAmTisch.indexOf(spielTisch.lastSpieler),1)
+        output += ". Spieler "+spielTisch.lastSpieler.spielername+" hat verloren und wurde entfernt!"
+        spielTisch.nextPlayer()
+        output += " Nächster Spieler ist: " +spielTisch.aktSpieler.spielername
+      }
+    } 
+    spielTisch.reset()
+    console.log(spielerAmTisch)
+    res.status(200).send({"message": output})
   }
   else{
-    spielerAmTisch[spielerAmTisch.indexOf(spielTisch.lastSpieler)].punkte -= 10
-    output = spielTisch.lastSpieler.spielername + " verliert 10 punkte"
-
-    //hat der letzte spieler verloren?
-    if(spielerAmTisch[spielerAmTisch.indexOf(spielTisch.lastSpieler)].punkte <= 10 ){
-      //ja
-      spielerAmTisch.splice(spielerAmTisch.indexOf(spielTisch.lastSpieler),1)
-      output += ". Spieler "+spielTisch.lastSpieler.spielername+" hat verloren und wurde entfernt!"
-      spielTisch.nextPlayer()
-      output += " Nächster Spieler ist: " +spielTisch.aktSpieler.spielername
-    }
-  } 
-  spielTisch.reset()
-  console.log(spielerAmTisch)
-  res.status(200).send({"message": output})
+    //nein, ist nicht dran
+    res.status(401).send("Du bist gerade nicht an der Reihe! "+ spielTisch.aktSpieler.spielername+ " ist an der Reihe!")
+  }
   
 })
 
