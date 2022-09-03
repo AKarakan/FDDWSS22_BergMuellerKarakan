@@ -10,7 +10,8 @@ module.exports = {
       if (!req.isAuthenticated()) {
         return next();
       } else {
-        res.redirect('/maexchen');
+        const id = req.user.googleId
+        res.redirect('/user/'+id);
       }
     },
   }
