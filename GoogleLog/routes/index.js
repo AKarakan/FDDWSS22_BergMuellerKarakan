@@ -16,6 +16,7 @@ router.get('/', ensureGuest, (req, res) => {
 router.get('/user/:id', ensureAuth, (req, res) => {
     res.render('maexchen', {
         name: req.user.firstName,
+        id: req.user.googleId,
     })
 })
 
