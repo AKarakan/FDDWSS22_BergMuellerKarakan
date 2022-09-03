@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Socket.IO chat</title>
+    <title>Mäxchen Chat</title>
     <style>
         body {
             margin: 0;
@@ -61,6 +61,7 @@
     </style>
 </head>
 <body>
+    <label id="Spielername" hidden>{{{ spielername }}}</label>
     <ul id="messages"></ul>
     <form id="form" action="">
         <input id="input" autocomplete="off" /><button>Send</button>
@@ -71,11 +72,12 @@
     var socket = io();
     var form = document.getElementById("form");
     var input = document.getElementById('input');
+    var spielername = document.getElementById('Spielername').innerText
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         if (input.value) {
-        socket.emit('chat message', input.value);
+        socket.emit('chat message', input.value+"#"+spielername);
         input.value = '';
         }
     });

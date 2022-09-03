@@ -4,10 +4,15 @@ const http = require('http');
 const server = http.createServer(app);
 const {Server} = require("socket.io");
 const io = new Server(server);
-//const axios = require("axios")
+const ehbs = require("express-handlebars")
+// app.use(express.static(__dirname+"/files"));
+
+app.set('view engine', 'handlebars');
+app.engine('handlebars', ehbs.engine({layoutsDir: __dirname+"/views/layouts"}));
+// app.set('views', './views');
 
 app.get("/", (req,res) =>{
-    res.sendFile(__dirname+"/files/index.html");
+    res.render('spieler',{spielername:"Test"});
 })
 
 let getBefehle = ["/aktStand","/aktPunkte"]
@@ -21,6 +26,8 @@ io.on('connection', (socket) => {
 
         path = msg.split(" ")[0]
         param = msg.split(" ")[1]
+        let spielername = msg.split('#')[1]
+        msg = msg.split('#')[0]
 
         if(getBefehle.some((elem)=> elem == path )) {
             console.log("incomming get Befehlt: "+ path)
@@ -48,8 +55,8 @@ io.on('connection', (socket) => {
             })
         }
         else{
-            console.log('message: ' + msg);
-            io.emit('chat message', msg);
+            console.log('message: ' +spielername + ": "+ msg);
+            io.emit('chat message',spielername + ": "+ msg);
         }
     });
     socket.on('disconnect', ()=>{
