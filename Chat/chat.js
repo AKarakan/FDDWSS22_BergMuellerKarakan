@@ -26,9 +26,10 @@ io.on('connection', (socket) => {
     console.log('a user connected');
 
     socket.on('chat message', (msg) => {
-
-        path = msg.split(" ")[0]
-        param = msg.split(" ")[1]
+        console.log(msg)
+        let pathParam = msg.split("#")[0]
+        path = pathParam.split(" ")[0]
+        param = pathParam.split(" ")[1]
         let spielername = msg.split('#')[1]
         msg = msg.split('#')[0]
 
