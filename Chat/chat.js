@@ -13,7 +13,9 @@ app.engine('handlebars', ehbs.engine({layoutsDir: __dirname+"/views/layouts"}));
 
 app.get("/", (req,res) =>{
     console.log(req.query)
-    res.render('spieler',{spielername:"Test"});
+    let spielername = req.query.spielername
+    makePostRequestWithParam("/join", spielername)
+    res.render('spieler',{spielername:spielername});
 })
 
 let getBefehle = ["/aktStand","/aktPunkte"]
