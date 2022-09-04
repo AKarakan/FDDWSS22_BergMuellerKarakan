@@ -62,6 +62,7 @@
 </head>
 <body>
     <label id="Spielername" hidden>{{{ spielername }}}</label>
+    <label id="spielerID" hidden>{{{ spielerID }}}</label>
     <ul id="messages"></ul>
     <form id="form" action="">
         <input id="input" autocomplete="off" /><button>Send</button>
@@ -73,11 +74,12 @@
     var form = document.getElementById("form");
     var input = document.getElementById('input');
     var spielername = document.getElementById('Spielername').innerText
+    var spielerID = document.getElementById('spielerID').innerText
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         if (input.value) {
-        socket.emit('chat message', input.value+"#"+spielername);
+        socket.emit('chat message', input.value+"#"+spielername+"#"+spielerID);
         input.value = '';
         }
     });
