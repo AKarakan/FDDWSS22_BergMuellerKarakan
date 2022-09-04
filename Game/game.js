@@ -61,15 +61,22 @@ game.post('/join',(req,res) => {
     .send({"message": "Spiel bereits gestartet. Kein Betritt möglich!"})
   }
   else{
-    //req.body.behauptung weil die function in chat.js das sendet
-    //und ich hatte keine lust nur wegen einem keyword eine neue function zu schreiben
-    let spielername = req.body.behauptung
-    spielerAmTisch.push(new Spieler(spielername,50, "Token Hier"))
-    console.log("Spieler/in "+ spielername + " nimm jetzt am Spiel teil")
-    console.log(spielerAmTisch)
-    res
-    .status(200)
-    .send({"message": "Spieler/in "+ spielername + " nimm jetzt am Spiel teil"})
+    let spielername = req.body.spielername
+    let spielerID = req.body.spielerID
+
+    //check: ist der spieler schon drinne?
+    let index = spielerAmTisch.findIndex(spieler => spieler.token === spielerID )
+    if (index === -1){ 
+      spielerAmTisch.push(new Spieler(spielername,50, spielerID))
+      console.log("Spieler/in "+ spielername + " nimm jetzt am Spiel teil")
+      console.log(spielerAmTisch)
+      res
+      .status(200)
+      .send({"message": "Spieler/in "+ spielername + " nimm jetzt am Spiel teil"})
+    }
+    else{
+      res.status(400).send({"message": "Spieler/in "+spielername+" nimmt schon teil!"})
+    }
   }
 })
 
@@ -119,7 +126,7 @@ game.post('/behaupten',(req,res)=>{
   //ist der Spieler dran?
   if(req.body.spielername == spielTisch.aktSpieler.spielername){
     //ja, ist dran
-    spielTisch.setBehauptung(req.body.behauptung)
+    spielTisch.setBehauptung(req.body.data)
     let outputMessage =  "Spieler "+spielTisch.aktSpieler.spielername + " hat " + spielTisch.aktBehauptung + " gesagt! "
     spielTisch.nextPlayer();
     outputMessage += "Spieler "+spielTisch.aktSpieler.spielername + " ist nun dran!"
@@ -135,7 +142,7 @@ game.post('/challenge',(req,res)=>{
   //ist der Spieler dran?
   if(req.body.spielername == spielTisch.aktSpieler.spielername){
     //ja, ist dran
-    spielTisch.setBehauptung(req.body.behauptung)
+    spielTisch.setBehauptung(req.body.data)
     let index = wuerfelWerte.indexOf(spielTisch.aktBehauptung)
     let lastWuerfelWertIndex = wuerfelWerte.indexOf(spielTisch.letzterWuerfelWert)
     let output = ""
