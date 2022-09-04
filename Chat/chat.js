@@ -14,48 +14,57 @@ app.engine('handlebars', ehbs.engine({layoutsDir: __dirname+"/views/layouts"}));
 app.get("/", (req,res) =>{
     console.log(req.query)
     let spielername = req.query.spielername
-    makePostRequestWithParam("/join", spielername)
-    res.render('spieler',{spielername:spielername});
+    let id = req.query.id
+    let joinAntwort = makePostRequestWithParam("/join", {spielername:spielername, spielerID : id})
+    joinAntwort
+    .then(res => console.log(JSON.parse(res).message))
+    .catch(res => console.log(JSON.parse(res).message))
+    res.render('spieler',{spielername:spielername, spielerID : id});
 })
 
 let getBefehle = ["/aktStand","/aktPunkte"]
 let postBefehle = ["/start","/wuerfeln"]
-let postParamBefehle = [ "/behaupten","/challenge"]
+let postParamBefehle = ["/behaupten","/challenge"]
 
 io.on('connection', (socket) => {
     console.log('a user connected');
 
     socket.on('chat message', (msg) => {
+
+        //msg Schema: Spieler MSG #name #ID
+        //msg Schema: text 1312312#Anton#1231231 
         console.log(msg)
         let pathParam = msg.split("#")[0]
+        let spielername = msg.split('#')[1]
+        let spielerID = msg.split('#')[2]
         path = pathParam.split(" ")[0]
         param = pathParam.split(" ")[1]
-        let spielername = msg.split('#')[1]
         msg = msg.split('#')[0]
 
         if(getBefehle.some((elem)=> elem == path )) {
             console.log("incomming get Befehlt: "+ path)
             makeGetRequest(path)
             .then((res)=> socket.emit('game event', JSON.parse(res).message))
-            .catch((err)=>socket.emit('game event', err))
+            .catch((err)=>socket.emit('game event', JSON.parse(res).message))
             
             }
         else if(postBefehle.some((elem)=> elem == path)){
             console.log("incomming post Befehlt: "+ path)
             makePostRequest(path)
             .then((res)=> socket.emit('game event', JSON.parse(res).message))
-            .catch((err)=>socket.emit('game event', err))
+            .catch((err)=>socket.emit('game event', JSON.parse(res).message))
 
         }
         else if(postParamBefehle.some((elem)=> elem == path)){
             console.log("incomming post param Befehlt: "+ path)
+            data = {spielername: spielername, data: param, spielerID: spielerID}
             makePostRequestWithParam(path,param)
             .then((res)=> {
                 console.log(res)
                 io.emit('game event', JSON.parse(res).message)
             })
             .catch((err)=>{
-                console.log(err)
+                socket.emit('game event', JSON.parse(res).message)
             })
         }
         else{
@@ -115,11 +124,9 @@ function makePostRequest(path){
     })
 }
 
-function makePostRequestWithParam(path,param){
+function makePostRequestWithParam(path,data){
     return new Promise((resolve, reject) =>{
-        postData = JSON.stringify({
-            behauptung: param
-        })
+        postData = JSON.stringify(data)
         const options = {
             hostname: 'localhost',
             port: 3000,
