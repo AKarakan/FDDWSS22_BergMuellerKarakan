@@ -5,21 +5,35 @@ const server = http.createServer(app);
 const {Server} = require("socket.io");
 const io = new Server(server);
 const ehbs = require("express-handlebars")
-// app.use(express.static(__dirname+"/files"));
+const mongoose = require("mongoose")
+require('dotenv').config({path: "./config.env"})
+const User = require("./models/User")
 
 app.set('view engine', 'handlebars');
 app.engine('handlebars', ehbs.engine({layoutsDir: __dirname+"/views/layouts"}));
-// app.set('views', './views');
 
 app.get("/", (req,res) =>{
+
     console.log(req.query)
     let spielername = req.query.spielername
     let id = req.query.id
-    let joinAntwort = makePostRequestWithParam("/join", {spielername:spielername, spielerID : id})
-    joinAntwort
-    .then(res => console.log(JSON.parse(res).message))
-    .catch(res => console.log(JSON.parse(res).message))
-    res.render('spieler',{spielername:spielername, spielerID : id});
+
+    mongoose.connect(process.env.MONGO_URI)
+    User.findOne({googleId: id}, function (err, docs) {
+        if (err){
+            // TODO: redirect to google login
+            console.log(err)
+        }
+        else{
+            console.log("Result : ", docs);
+            let joinAntwort = makePostRequestWithParam("/join", {spielername:spielername, spielerID : id})
+            joinAntwort
+            .then(res => console.log(JSON.parse(res).message))
+            .catch(res => console.log(JSON.parse(res).message))
+            res.render('spieler',{spielername:spielername, spielerID : id});
+        }
+    });
+
 })
 
 let getBefehle = ["/aktStand","/aktPunkte"]
