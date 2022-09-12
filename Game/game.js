@@ -58,7 +58,7 @@ game.post('/join',(req,res) => {
     console.log("Spiel bereits gestartet. Kein Betritt möglich!")
     res
     .status(403)
-    .send({"message": "Spiel bereits gestartet. Kein Betritt möglich!"})
+    .send({"messageToOne": "Spiel bereits gestartet. Kein Betritt möglich!"})
   }
   else{
     let spielername = req.body.spielername
@@ -72,10 +72,10 @@ game.post('/join',(req,res) => {
       console.log(spielerAmTisch)
       res
       .status(200)
-      .send({"message": "Spieler/in "+ spielername + " nimm jetzt am Spiel teil"})
+      .send({"messageToAll": "Spieler/in "+ spielername + " nimm jetzt am Spiel teil"})
     }
     else{
-      res.status(400).send({"message": "Spieler/in "+spielername+" nimmt schon teil!"})
+      res.status(400).send({"messageToOne": "Spieler/in "+spielername+" nimmt schon teil!"})
     }
   }
 })
@@ -90,7 +90,7 @@ game.post('/start', (req, res) => {
   if(spielerAmTisch.length < 3){
     res
     .status(409)
-    .send({"message": "Das Spiel kann nicht gestartet werden. Es sind nicht genügend Spieler anwesend! "})
+    .send({"messageToAll": "Das Spiel kann nicht gestartet werden. Es sind nicht genügend Spieler anwesend! "})
   }
   else{
     spielGestartet = true
@@ -101,7 +101,7 @@ game.post('/start', (req, res) => {
     
     res
     .status(200)
-    .send({"message": "Das Spiel startet! Spieler: "+ spielTisch.aktSpieler.spielername+" ist dran!"})
+    .send({"messageToAll": "Das Spiel startet! Spieler: "+ spielTisch.aktSpieler.spielername+" ist dran!"})
   }
 })
 
@@ -113,12 +113,12 @@ game.post('/wuerfeln',(req,res)=>{
     console.log("wuerfel wert: "+x)
   
     spielTisch.setAktWuerfelWert(x)
-    res.status(200).send({"message": "Du hast "+ spielTisch.aktWuerfelWert + "gewürfelt",
-    "wuerfelwert": spielTisch.aktWuerfelWert})
+    res.status(200).send({"messageToOne": "Du hast "+ spielTisch.aktWuerfelWert + "gewürfelt",
+    "messageToAll": "Spieler "+spielTisch.aktSpieler.spielername+" würfelt gerade."})
   }
   else{
     //nein, ist nicht dran
-    res.status(401).send("Du bist gerade nicht an der Reihe! "+ spielTisch.aktSpieler.spielername+ " ist an der Reihe!")
+    res.status(401).send({"messageToOne":"Du bist gerade nicht an der Reihe! "+ spielTisch.aktSpieler.spielername+ " ist an der Reihe!"})
   }
 })
 
@@ -130,11 +130,11 @@ game.post('/behaupten',(req,res)=>{
     let outputMessage =  "Spieler "+spielTisch.aktSpieler.spielername + " hat " + spielTisch.aktBehauptung + " gesagt! "
     spielTisch.nextPlayer();
     outputMessage += "Spieler "+spielTisch.aktSpieler.spielername + " ist nun dran!"
-    res.status(200).send({"message": outputMessage})
+    res.status(200).send({"messageToAll": outputMessage})
   }
   else{
     //nein ist nicht dran
-    res.status(401).send("Du bist gerade nicht an der Reihe! "+ spielTisch.aktSpieler.spielername+ " ist an der Reihe!")
+    res.status(401).send({"messageToOne":"Du bist gerade nicht an der Reihe! "+ spielTisch.aktSpieler.spielername+ " ist an der Reihe!"})
   }
 })
 
@@ -174,11 +174,11 @@ game.post('/challenge',(req,res)=>{
     } 
     spielTisch.reset()
     console.log(spielerAmTisch)
-    res.status(200).send({"message": output})
+    res.status(200).send({"messageToAll": output})
   }
   else{
     //nein, ist nicht dran
-    res.status(401).send("Du bist gerade nicht an der Reihe! "+ spielTisch.aktSpieler.spielername+ " ist an der Reihe!")
+    res.status(401).send({"messageToOne":"Du bist gerade nicht an der Reihe! "+ spielTisch.aktSpieler.spielername+ " ist an der Reihe!"})
   }
   
 })
@@ -187,7 +187,7 @@ game.get('/aktStand',(req,res)=>{
   let str = spielTisch.show()
   console.log(str)
 
-  res.status(200).send({"message": str})
+  res.status(200).send({"messageToOne": str})
  
 })
 
@@ -196,7 +196,7 @@ game.get('/aktPunkte',(req,res)=>{
   for (i in spielerAmTisch){
     output += "Spieler: " + spielerAmTisch[i].spielername +", Punkte: " +spielerAmTisch[i].punkte +" | "
   }
-  res.status(200).send({"message": output})
+  res.status(200).send({"messageToOne": output})
 })
 
 game.listen(port, ()=>{console.log("server läuft auf port: " + port);})

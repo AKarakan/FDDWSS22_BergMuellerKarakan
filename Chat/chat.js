@@ -28,8 +28,8 @@ app.get("/", (req,res) =>{
             console.log("Result : ", docs);
             let joinAntwort = makePostRequestWithParam("/join", {spielername:spielername, spielerID : id})
             joinAntwort
-            .then(res => console.log(JSON.parse(res).message))
-            .catch(res => console.log(JSON.parse(res).message))
+            .then(res => console.log(JSON.parse(res).messageToOne))
+            .catch(res => console.log(JSON.parse(res).messageToOne))
             res.render('spieler',{spielername:spielername, spielerID : id});
         }
     });
@@ -58,15 +58,33 @@ io.on('connection', (socket) => {
         if(getBefehle.some((elem)=> elem == path )) {
             console.log("incomming get Befehlt: "+ path)
             makeGetRequest(path)
-            .then((res)=> socket.emit('game event', JSON.parse(res).message))
-            .catch((err)=>socket.emit('game event', JSON.parse(res).message))
+            .then((res)=> {
+                if(JSON.parse(res).messageToOne){
+                    socket.emit('game event', JSON.parse(res).messageToOne)
+                }
+                if(JSON.parse(res).messageToAll){
+                    socket.broadcast.emit('game event', JSON.parse(res).messageToAll)
+                }
+            })
+            .catch((err)=>{
+                socket.emit('game event', JSON.parse(res).message)
+            })
             
-            }
+        }
         else if(postBefehle.some((elem)=> elem == path)){
             console.log("incomming post Befehlt: "+ path)
             makePostRequest(path)
-            .then((res)=> socket.emit('game event', JSON.parse(res).message))
-            .catch((err)=>socket.emit('game event', JSON.parse(res).message))
+            .then((res)=> {
+                if(JSON.parse(res).messageToOne){
+                    socket.emit('game event', JSON.parse(res).messageToOne)
+                }
+                if(JSON.parse(res).messageToAll){
+                    socket.broadcast.emit('game event', JSON.parse(res).messageToAll)
+                }
+            })
+            .catch((err)=>{
+                socket.emit('game event', JSON.parse(res).message)
+            })
 
         }
         else if(postParamBefehle.some((elem)=> elem == path)){
@@ -74,8 +92,12 @@ io.on('connection', (socket) => {
             data = {spielername: spielername, data: param, spielerID: spielerID}
             makePostRequestWithParam(path,param)
             .then((res)=> {
-                console.log(res)
-                io.emit('game event', JSON.parse(res).message)
+                if(JSON.parse(res).messageToOne){
+                    socket.emit('game event', JSON.parse(res).messageToOne)
+                }
+                if(JSON.parse(res).messageToAll){
+                    socket.broadcast.emit('game event', JSON.parse(res).messageToAll)
+                }
             })
             .catch((err)=>{
                 socket.emit('game event', JSON.parse(res).message)
