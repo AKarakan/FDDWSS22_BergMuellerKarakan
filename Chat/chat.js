@@ -21,21 +21,26 @@ app.get("/", (req,res) =>{
     mongoose.connect(process.env.MONGO_URI)
     User.findOne({googleId: id}, function (err, docs) {
         if (err){
-            // TODO: redirect to google login
+            //redirect to google login
             res.redirect(302,"localhost:3005")
         }
         else{
-            console.log("Result : ", docs);
-            let joinAntwort = makePostRequestWithParam("/join", {spielername:spielername, spielerID : id})
-            joinAntwort
-            .then((response) => {
-                //der spieler tritt einem noch nicht gestarteten spiel bei
-                console.log(JSON.parse(response).messageToOne)
-                res.render('spieler',{spielername:spielername, spielerID : id});
-            })
-            .catch((response) => {
-                console.log(JSON.parse(response).messageToOne)
-            })
+            if(docs){
+                console.log("Result : ", docs);
+                let joinAntwort = makePostRequestWithParam("/join", {spielername:spielername, spielerID : id})
+                joinAntwort
+                .then((response) => {
+                    //der spieler tritt einem noch nicht gestarteten spiel bei
+                    console.log(JSON.parse(response).messageToOne)
+                    res.render('spieler',{spielername:spielername, spielerID : id});
+                })
+                .catch((response) => {
+                    console.log(JSON.parse(response).messageToOne)
+                })
+            }
+            else{
+                res.redirect(302,"localhost:3005")
+            }
         }
     });
 
