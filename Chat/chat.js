@@ -22,15 +22,20 @@ app.get("/", (req,res) =>{
     User.findOne({googleId: id}, function (err, docs) {
         if (err){
             // TODO: redirect to google login
-            console.log(err)
+            res.redirect(302,"localhost:3005")
         }
         else{
             console.log("Result : ", docs);
             let joinAntwort = makePostRequestWithParam("/join", {spielername:spielername, spielerID : id})
             joinAntwort
-            .then(res => console.log(JSON.parse(res).messageToOne))
-            .catch(res => console.log(JSON.parse(res).messageToOne))
-            res.render('spieler',{spielername:spielername, spielerID : id});
+            .then((response) => {
+                //der spieler tritt einem noch nicht gestarteten spiel bei
+                console.log(JSON.parse(response).messageToOne)
+                res.render('spieler',{spielername:spielername, spielerID : id});
+            })
+            .catch((response) => {
+                console.log(JSON.parse(response).messageToOne)
+            })
         }
     });
 
