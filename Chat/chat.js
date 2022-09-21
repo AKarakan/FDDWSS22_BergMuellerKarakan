@@ -22,13 +22,8 @@ app.get("/", (req,res) =>{
     User.findOne({googleId: id}, function (err, docs) {
         if (err){
             //redirect to google login
-            // res.redirect(302,"http://localhost:3005/")
-            res.redirect(302,url.format({
-                pathname:"http://localhost:3005/",
-                query: {
-                   "error": err
-                 }
-              }));
+            //res.redirect(302,"http://localhost:3005/")
+            console.log("Fehler in der Verbindung zwischen Mongoose und der Anwendung!")
         }
         else{
             if(docs){
@@ -41,12 +36,9 @@ app.get("/", (req,res) =>{
                     res.render('spieler',{spielername:spielername, spielerID : id});
                 })
                 .catch((response) => {
-                    res.redirect(302,url.format({
-                        pathname:"http://localhost:3005/",
-                        query: {
-                           "message": JSON.parse(response).messageToOne
-                         }
-                      }));
+                    let err = JSON.parse(response).messageToOne;
+                    //res.redirect(302,"http://localhost:3005/")
+                    console.log(err)
                 })
             }
             else{
