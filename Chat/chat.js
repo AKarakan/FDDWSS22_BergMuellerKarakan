@@ -22,7 +22,13 @@ app.get("/", (req,res) =>{
     User.findOne({googleId: id}, function (err, docs) {
         if (err){
             //redirect to google login
-            res.redirect(302,"http://localhost:3005/")
+            // res.redirect(302,"http://localhost:3005/")
+            res.redirect(302,url.format({
+                pathname:"http://localhost:3005/",
+                query: {
+                   "error": err
+                 }
+              }));
         }
         else{
             if(docs){
@@ -35,7 +41,12 @@ app.get("/", (req,res) =>{
                     res.render('spieler',{spielername:spielername, spielerID : id});
                 })
                 .catch((response) => {
-                    console.log(JSON.parse(response).messageToOne)
+                    res.redirect(302,url.format({
+                        pathname:"http://localhost:3005/",
+                        query: {
+                           "message": JSON.parse(response).messageToOne
+                         }
+                      }));
                 })
             }
             else{
