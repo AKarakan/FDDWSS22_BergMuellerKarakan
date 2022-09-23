@@ -2,7 +2,7 @@
 
 ***
 
-Alle Informationen zum Projekt und dessen Umsetzung findet ihr in der [Projektdokumentation]([https://github.com/AKarakan/FDDWSS22_BergMuellerKarakan/wiki/Dokumentation](Projektdokumentation))
+Alle Informationen zum Projekt und dessen Umsetzung findet ihr in der [Projektdokumentation](https://github.com/AKarakan/FDDWSS22_BergMuellerKarakan/wiki/Dokumentation)
 
 ***
 
