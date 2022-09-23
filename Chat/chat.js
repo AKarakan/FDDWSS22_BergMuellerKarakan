@@ -126,14 +126,14 @@ io.on('connection', (socket) => {
     })
 });
 
-let port = process.env.PORT || 3001;
+let port = process.env.CHAT_PORT || 3001;
 server.listen(port,()=> console.log("server listening on port:" + port))
 
 function makeGetRequest(path) {  
     return new Promise((resolve, reject) =>{
         const options = {
-            hostname: 'localhost',
-            port: 3000,
+            hostname: 'game',
+            port: 3004,
             path: path,
             method: 'GET',
         };
@@ -154,8 +154,8 @@ function makeGetRequest(path) {
 function makePostRequest(path){
     return new Promise((resolve, reject) =>{
         const options = {
-            hostname: 'localhost',
-            port: 3000,
+            hostname: 'game',
+            port: 3004,
             path: path,
             method: 'POST',
         };
@@ -177,8 +177,8 @@ function makePostRequestWithParam(path,data){
     return new Promise((resolve, reject) =>{
         postData = JSON.stringify(data)
         const options = {
-            hostname: 'localhost',
-            port: 3000,
+            hostname: 'game',
+            port: 3004,
             path: path,
             method: 'POST',
             headers: {
