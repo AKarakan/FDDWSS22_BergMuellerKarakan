@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  login:
+    build: ./GoogleLog
+    ports:
+      - 3005:3005
+    env_file:
+      - GoogleLog/config/config.env
+    networks:
+      - app-network
+
+  game:
+    build: ./Game
+    ports:
+      - 3004:3004
+    networks:
+      - app-network
+
+  chat:
+    build: ./Chat
+    ports:
+      - 3001:3001
+    env_file:
+      - Chat/config.env
+    networks:
+      - app-network  
+
+networks:
+  app-network:
+    driver: bridge
