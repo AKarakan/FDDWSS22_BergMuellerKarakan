@@ -9,6 +9,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 3004
 
 CMD [ "node", "game.js" ]
