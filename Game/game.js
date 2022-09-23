@@ -1,7 +1,7 @@
 const express = require('express');
 const game = express();
 const bodyParser = require('body-parser')
-const port = process.env.PORT || 3000;
+const port = 3004;
 const Spieler = require("./spieler");
 game.use(bodyParser.json());
 game.use(express.urlencoded({extended: true}));
