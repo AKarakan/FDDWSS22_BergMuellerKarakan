@@ -112,8 +112,8 @@ io.on('connection', (socket) => {
         else if(postParamBefehle.some((elem)=> elem == path)){
             console.log("incomming post param Befehlt: "+ path)
             if(!param) param = "00"
-            data = {spielername: spielername, data: param, spielerID: spielerID}
-            makePostRequestWithParam(path,param)
+            let data = {spielername: spielername, data: param, spielerID: spielerID}
+            makePostRequestWithParam(path,data)
             .then((res)=> {
                 console.log("============================")
                 console.log(res)
