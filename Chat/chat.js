@@ -50,8 +50,8 @@ app.get("/", (req,res) =>{
 })
 
 let getBefehle = ["/aktStand","/aktPunkte"]
-let postBefehle = ["/start","/wuerfeln"]
-let postParamBefehle = ["/behaupten","/challenge"]
+let postBefehle = ["/start"]
+let postParamBefehle = ["/behaupten","/challenge","/wuerfeln"]
 
 io.on('connection', (socket) => {
     console.log('a user connected');
