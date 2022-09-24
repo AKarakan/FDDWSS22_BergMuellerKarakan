@@ -67,7 +67,7 @@ game.post('/join',(req,res) => {
     //check: ist der spieler schon drinne?
     let index = spielerAmTisch.findIndex(spieler => spieler.token === spielerID )
     if (index === -1){ 
-      spielerAmTisch.push(new Spieler(spielername,50, spielerID))
+      spielerAmTisch.push(new Spieler(spielername,10, spielerID))
       console.log("Spieler/in "+ spielername + " nimm jetzt am Spiel teil")
       console.log(spielerAmTisch)
       res
@@ -160,7 +160,7 @@ game.post('/challenge',(req,res)=>{
       if(spielerAmTisch[spielerAmTisch.findIndex(spieler => spieler.token == spielTisch.aktSpieler.token)].punkte <= 0){
         //ja
         output = spielTisch.aktSpieler.spielername+ " hat verloren und hat das spiel verlassen"
-        spielerAmTisch.splice(spielerAmTisch[spielerAmTisch.findIndex(spieler => spieler.token == spielTisch.aktSpieler.token)],1)
+        spielerAmTisch.splice(spielerAmTisch.findIndex(spieler => spieler.token == spielTisch.aktSpieler.token),1)
         spielTisch.nextPlayer()
       }
     }
@@ -174,7 +174,7 @@ game.post('/challenge',(req,res)=>{
       if(spielerAmTisch[spielerAmTisch.findIndex(spieler => spieler.token == spielTisch.lastSpieler.token)].punkte <= 10 ){
         //ja
         output += ". Spieler "+spielTisch.lastSpieler.spielername+" hat verloren und wurde entfernt!"
-        spielerAmTisch.splice(spielerAmTisch[spielerAmTisch.findIndex(spieler => spieler.token == spielTisch.lastSpieler.token)],1)
+        spielerAmTisch.splice(spielerAmTisch.findIndex(spieler => spieler.token == spielTisch.lastSpieler.token),1)
         spielTisch.nextPlayer()
         output += " Nächster Spieler ist: " +spielTisch.aktSpieler.spielername
       }
