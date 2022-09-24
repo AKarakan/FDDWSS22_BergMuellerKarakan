@@ -65,7 +65,7 @@ io.on('connection', (socket) => {
         let spielername = msg.split('#')[1]
         let spielerID = msg.split('#')[2]
         path = pathParam.split(" ")[0]
-        param = pathParam.split(" ")[1]
+        let param = pathParam.split(" ")[1] ?? '00' //spezialfall "/wuerfeln 00" 
         msg = msg.split('#')[0]
 
         if(getBefehle.some((elem)=> elem == path )) {
