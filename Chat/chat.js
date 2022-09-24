@@ -65,7 +65,7 @@ io.on('connection', (socket) => {
         let spielername = msg.split('#')[1]
         let spielerID = msg.split('#')[2]
         path = pathParam.split(" ")[0]
-        let param = pathParam.split(" ")[1] ?? '00' //spezialfall "/wuerfeln 00" 
+        let param = pathParam.split(" ")[1] //spezialfall "/wuerfeln 00" 
         msg = msg.split('#')[0]
 
         if(getBefehle.some((elem)=> elem == path )) {
@@ -111,6 +111,7 @@ io.on('connection', (socket) => {
         }
         else if(postParamBefehle.some((elem)=> elem == path)){
             console.log("incomming post param Befehlt: "+ path)
+            if(!param) param = "00"
             data = {spielername: spielername, data: param, spielerID: spielerID}
             makePostRequestWithParam(path,param)
             .then((res)=> {
