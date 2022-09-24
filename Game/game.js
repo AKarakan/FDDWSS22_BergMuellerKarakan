@@ -142,12 +142,12 @@ game.post('/challenge',(req,res)=>{
   //ist der Spieler dran?
   if(req.body.spielername == spielTisch.aktSpieler.spielername){
     //ja, ist dran
-    spielTisch.setBehauptung(req.body.data)
-    let index = wuerfelWerte.indexOf(spielTisch.aktBehauptung)
-    let lastWuerfelWertIndex = wuerfelWerte.indexOf(spielTisch.letzterWuerfelWert)
+    // spielTisch.setBehauptung(req.body.data)
+    let aktBehauptungsIndex = wuerfelWerte.indexOf(spielTisch.aktBehauptung)
+    let lastWuerfelWertIndex = wuerfelWerte.indexOf(spielTisch.aktWuerfelWert)
     let output = ""
 
-    if (index>lastWuerfelWertIndex) {
+    if (aktBehauptungsIndex>lastWuerfelWertIndex) {
       output = aktSpieler.spielername + " verliert 10 punkte"
       spielerAmTisch[spielerAmTisch.indexOf(aktSpieler)].punkte -= 10 
 
