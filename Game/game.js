@@ -162,6 +162,10 @@ game.post('/challenge',(req,res)=>{
         output = spielTisch.aktSpieler.spielername+ " hat verloren und hat das spiel verlassen"
         spielerAmTisch.splice(spielerAmTisch.findIndex(spieler => spieler.token == spielTisch.aktSpieler.token),1)
         spielTisch.nextPlayer()
+        if(spielerAmTisch.length != 1){
+          output += " Nächster Spieler ist: " +spielTisch.aktSpieler.spielername
+        }
+
       }
     }
     else if(aktBehauptungsIndex != lastWuerfelWertIndex){
@@ -173,14 +177,17 @@ game.post('/challenge',(req,res)=>{
       //hat der letzte spieler verloren?
       if(spielerAmTisch[spielerAmTisch.findIndex(spieler => spieler.token == spielTisch.lastSpieler.token)].punkte <= 10 ){
         //ja
-        output += ". Spieler "+spielTisch.lastSpieler.spielername+" hat verloren und wurde entfernt!"
+        output += ". Spieler "+spielTisch.lastSpieler.spielername+" hat verloren und hat das spiel verlassen!"
         spielerAmTisch.splice(spielerAmTisch.findIndex(spieler => spieler.token == spielTisch.lastSpieler.token),1)
         spielTisch.nextPlayer()
-        output += " Nächster Spieler ist: " +spielTisch.aktSpieler.spielername
+        if(spielerAmTisch.length != 1){
+          output += " Nächster Spieler ist: " +spielTisch.aktSpieler.spielername
+        }
       }
     } 
     spielTisch.reset()
     console.log(spielerAmTisch)
+    if(spielerAmTisch.length == 1 ) output+= " Spieler/in " + spielerAmTisch[0].spielername+ " hat gewonnen. Zum neustarten, starte den server neu und verbinde dich nochmal. :)"
     res.status(200).send({"messageToAll": output})
   }
   else{
