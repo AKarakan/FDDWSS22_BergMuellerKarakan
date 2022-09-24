@@ -151,6 +151,11 @@ game.post('/challenge',(req,res)=>{
 
     //b66 w62
     if (aktBehauptungsIndex == lastWuerfelWertIndex) {
+
+      console.log("WAHREHEIT")
+      console.log(spielTisch.aktSpieler.spielername+ ": aktBehauptungsIndex= "+ aktBehauptungsIndex)
+      console.log(spielTisch.aktSpieler.spielername+ ": lastWuerfelWertIndex= "+ lastWuerfelWertIndex)
+
       output = spielTisch.aktSpieler.spielername + " verliert 10 punkte"
       // spielerAmTisch[spielerAmTisch.indexOf(spielTisch.aktSpieler)].punkte -= 10 
       spielerAmTisch[spielerAmTisch.findIndex(spieler => spieler.token === spielTisch.aktSpieler.token)].punkte -= 10
@@ -159,11 +164,14 @@ game.post('/challenge',(req,res)=>{
       if(spielerAmTisch[spielerAmTisch.findIndex(spieler => spieler.token === spielTisch.aktSpieler.token)].punkte <= 0){
         //ja
         spielerAmTisch.splice(spielerAmTisch[spielerAmTisch.findIndex(spieler => spieler.token === spielTisch.aktSpieler.token)],1)
-        output = aktSpieler.spielername+ " hat verloren und hat das spiel verlassen"
+        output = spielTisch.aktSpieler.spielername+ " hat verloren und hat das spiel verlassen"
         spielTisch.nextPlayer()
       }
     }
-    else{
+    else if(aktBehauptungsIndex != lastWuerfelWertIndex){
+      console.log("LÜGE!!!!")
+      console.log(spielTisch.lastSpieler.spielername+ ": aktBehauptungsIndex= "+ aktBehauptungsIndex)
+      console.log(spielTisch.lastSpieler.spielername+ ": lastWuerfelWertIndex= "+ lastWuerfelWertIndex)
       // spielerAmTisch[spielerAmTisch.indexOf(spielTisch.lastSpieler)].punkte -= 10
       spielerAmTisch[spielerAmTisch.findIndex(spieler => spieler.token === spielTisch.lastSpieler.token)].punkte -= 10
       output = spielTisch.lastSpieler.spielername + " verliert 10 punkte"
