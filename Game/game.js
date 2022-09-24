@@ -144,6 +144,8 @@ game.post('/challenge',(req,res)=>{
     //ja, ist dran
     // spielTisch.setBehauptung(req.body.data)
     // wuerfelWerte.indexOf(spielTisch.aktBehauptung)
+    console.log("aktBehauptung: "+spielTisch.aktBehauptung)
+    console.log("aktWuerfelwert: "+ aktWuerfelWert)
     let aktBehauptungsIndex = wuerfelWerte.findIndex(wuerfelWert => wuerfelWert === spielTisch.aktBehauptung)
     // wuerfelWerte.indexOf(spielTisch.aktWuerfelWert)
     let lastWuerfelWertIndex = wuerfelWerte.findIndex(wuerfelWert => wuerfelWert === spielTisch.aktWuerfelWert)
