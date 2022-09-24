@@ -80,7 +80,10 @@ io.on('connection', (socket) => {
                 }
             })
             .catch((err)=>{
-                socket.emit('game event', JSON.parse(res).message)
+                console.log("============================")
+                console.log(err)
+                console.log("============================")
+                socket.emit('game event', JSON.parse(err).messageToAll)
             })
             
         }
@@ -96,7 +99,7 @@ io.on('connection', (socket) => {
                 }
             })
             .catch((err)=>{
-                socket.emit('game event', JSON.parse(res).message)
+                socket.emit('game event', JSON.parse(err).messageToAll)
             })
 
         }
@@ -105,6 +108,9 @@ io.on('connection', (socket) => {
             data = {spielername: spielername, data: param, spielerID: spielerID}
             makePostRequestWithParam(path,param)
             .then((res)=> {
+                console.log("============================")
+                console.log(res)
+                console.log("============================")
                 if(JSON.parse(res).messageToOne){
                     socket.emit('game event', JSON.parse(res).messageToOne)
                 }
@@ -113,7 +119,7 @@ io.on('connection', (socket) => {
                 }
             })
             .catch((err)=>{
-                socket.emit('game event', JSON.parse(res).message)
+                socket.emit('game event', JSON.parse(err).messageToAll)
             })
         }
         else{
