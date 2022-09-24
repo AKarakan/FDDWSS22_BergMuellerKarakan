@@ -33,6 +33,9 @@ app.get("/", (req,res) =>{
                 .then((response) => {
                     //der spieler tritt einem noch nicht gestarteten spiel bei
                     console.log(JSON.parse(response).messageToOne)
+                    if( "Spiel bereits gestartet. Kein Betritt möglich!" == JSON.parse(response).messageToOne) {
+                        res.redirect("http://localhost:3005/lobby")
+                    }
                     res.render('spieler',{spielername:spielername, spielerID : id});
                 })
                 .catch((response) => {
