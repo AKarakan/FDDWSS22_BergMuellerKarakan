@@ -145,12 +145,14 @@ game.post('/challenge',(req,res)=>{
     // spielTisch.setBehauptung(req.body.data)
     // wuerfelWerte.indexOf(spielTisch.aktBehauptung)
     console.log("aktBehauptung: "+spielTisch.aktBehauptung)
-    console.log("aktWuerfelwert: "+ aktWuerfelWert)
-    let aktBehauptungsIndex = wuerfelWerte.findIndex(wuerfelWert => wuerfelWert === spielTisch.aktBehauptung)
+    console.log("aktWuerfelwert: "+ spielTisch.aktWuerfelWert)
+    // let aktBehauptungsIndex = wuerfelWerte.indexOf(spielTisch.aktBehauptung)
+    let aktBehauptungsIndex = wuerfelWerte.findIndex(wuerfelWert => wuerfelWert == spielTisch.aktBehauptung)
     // wuerfelWerte.indexOf(spielTisch.aktWuerfelWert)
     let lastWuerfelWertIndex = wuerfelWerte.findIndex(wuerfelWert => wuerfelWert === spielTisch.aktWuerfelWert)
     let output = ""
-
+    console.log("aktBehauptungsIndex " + aktBehauptungsIndex)
+    console.log("lastWuerfelWertIndex " + lastWuerfelWertIndex)
     //b66 w62
     if (aktBehauptungsIndex == lastWuerfelWertIndex) {
 
