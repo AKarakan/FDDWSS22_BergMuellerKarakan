@@ -20,5 +20,11 @@ router.get('/user/:id', ensureAuth, (req, res) => {
     })
 })
 
+router.get('/lobby', ensureAuth, (req, res) => {
+    res.render('lobby', {
+        name: req.user.firstName,
+        id: req.user.googleId,
+    })
+})
 
 module.exports = router
