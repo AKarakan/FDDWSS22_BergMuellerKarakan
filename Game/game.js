@@ -147,12 +147,13 @@ game.post('/challenge',(req,res)=>{
     let lastWuerfelWertIndex = wuerfelWerte.indexOf(spielTisch.aktWuerfelWert)
     let output = ""
 
-    if (aktBehauptungsIndex>lastWuerfelWertIndex) {
-      output = aktSpieler.spielername + " verliert 10 punkte"
-      spielerAmTisch[spielerAmTisch.indexOf(aktSpieler)].punkte -= 10 
+    //b66 w62
+    if (aktBehauptungsIndex == lastWuerfelWertIndex) {
+      output = spielTisch.aktSpieler.spielername + " verliert 10 punkte"
+      spielerAmTisch[spielerAmTisch.indexOf(spielTisch.aktSpieler)].punkte -= 10 
 
       //hat der aktuelle spieler verloren?
-      if(spielerAmTisch[spielerAmTisch.indexOf(aktSpieler)].punkte <= 0){
+      if(spielerAmTisch[spielerAmTisch.indexOf(spielTisch.aktSpieler)].punkte <= 0){
         //ja
         spielerAmTisch.splice(spielerAmTisch.indexOf(aktSpieler),1)
         output = aktSpieler.spielername+ " hat verloren und hat das spiel verlassen"
