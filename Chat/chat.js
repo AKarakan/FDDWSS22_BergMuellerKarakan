@@ -36,7 +36,9 @@ app.get("/", (req,res) =>{
                     if( "Spiel bereits gestartet. Kein Betritt möglich!" == JSON.parse(response).messageToOne) {
                         res.redirect("http://localhost:3005/lobby")
                     }
-                    res.render('spieler',{spielername:spielername, spielerID : id});
+                    else{
+                        res.render('spieler',{spielername:spielername, spielerID : id});
+                    }
                 })
                 .catch((response) => {
                     let err = JSON.parse(response).messageToOne;
