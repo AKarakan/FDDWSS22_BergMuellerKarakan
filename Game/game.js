@@ -151,8 +151,6 @@ game.post('/challenge',(req,res)=>{
     if (aktBehauptungsIndex == lastWuerfelWertIndex) {
 
       console.log("WAHREHEIT")
-      console.log(spielTisch.aktSpieler.spielername+ ": aktBehauptungsIndex= "+ aktBehauptungsIndex)
-      console.log(spielTisch.aktSpieler.spielername+ ": lastWuerfelWertIndex= "+ lastWuerfelWertIndex)
 
       output = spielTisch.aktSpieler.spielername + " verliert 10 punkte"
       
@@ -161,8 +159,8 @@ game.post('/challenge',(req,res)=>{
       //hat der aktuelle spieler verloren?
       if(spielerAmTisch[spielerAmTisch.findIndex(spieler => spieler.token == spielTisch.aktSpieler.token)].punkte <= 0){
         //ja
-        spielerAmTisch.splice(spielerAmTisch[spielerAmTisch.findIndex(spieler => spieler.token === spielTisch.aktSpieler.token)],1)
         output = spielTisch.aktSpieler.spielername+ " hat verloren und hat das spiel verlassen"
+        spielerAmTisch.splice(spielerAmTisch[spielerAmTisch.findIndex(spieler => spieler.token == spielTisch.aktSpieler.token)],1)
         spielTisch.nextPlayer()
       }
     }
@@ -175,8 +173,8 @@ game.post('/challenge',(req,res)=>{
       //hat der letzte spieler verloren?
       if(spielerAmTisch[spielerAmTisch.findIndex(spieler => spieler.token == spielTisch.lastSpieler.token)].punkte <= 10 ){
         //ja
-        spielerAmTisch.splice(spielerAmTisch[spielerAmTisch.findIndex(spieler => spieler.token === spielTisch.lastSpieler.token)],1)
         output += ". Spieler "+spielTisch.lastSpieler.spielername+" hat verloren und wurde entfernt!"
+        spielerAmTisch.splice(spielerAmTisch[spielerAmTisch.findIndex(spieler => spieler.token == spielTisch.lastSpieler.token)],1)
         spielTisch.nextPlayer()
         output += " Nächster Spieler ist: " +spielTisch.aktSpieler.spielername
       }
