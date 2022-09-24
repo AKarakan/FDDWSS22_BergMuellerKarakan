@@ -72,11 +72,14 @@ io.on('connection', (socket) => {
             console.log("incomming get Befehlt: "+ path)
             makeGetRequest(path)
             .then((res)=> {
+                console.log("============================")
+                console.log(res)
+                console.log("============================")
                 if(JSON.parse(res).messageToOne){
                     socket.emit('game event', JSON.parse(res).messageToOne)
                 }
                 if(JSON.parse(res).messageToAll){
-                    socket.broadcast.emit('game event', JSON.parse(res).messageToAll)
+                    io.emit('game event', JSON.parse(res).messageToAll)
                 }
             })
             .catch((err)=>{
@@ -91,11 +94,14 @@ io.on('connection', (socket) => {
             console.log("incomming post Befehlt: "+ path)
             makePostRequest(path)
             .then((res)=> {
+                console.log("============================")
+                console.log(res)
+                console.log("============================")
                 if(JSON.parse(res).messageToOne){
                     socket.emit('game event', JSON.parse(res).messageToOne)
                 }
                 if(JSON.parse(res).messageToAll){
-                    socket.broadcast.emit('game event', JSON.parse(res).messageToAll)
+                    io.emit('game event', JSON.parse(res).messageToAll)
                 }
             })
             .catch((err)=>{
@@ -115,7 +121,7 @@ io.on('connection', (socket) => {
                     socket.emit('game event', JSON.parse(res).messageToOne)
                 }
                 if(JSON.parse(res).messageToAll){
-                    socket.broadcast.emit('game event', JSON.parse(res).messageToAll)
+                    io.emit('game event', JSON.parse(res).messageToAll)
                 }
             })
             .catch((err)=>{
