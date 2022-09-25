@@ -67,7 +67,7 @@ game.post('/join',(req,res) => {
     //check: ist der spieler schon drinne?
     let index = spielerAmTisch.findIndex(spieler => spieler.token === spielerID )
     if (index === -1){ 
-      spielerAmTisch.push(new Spieler(spielername,10, spielerID))
+      spielerAmTisch.push(new Spieler(spielername,50, spielerID))
       console.log("Spieler/in "+ spielername + " nimm jetzt am Spiel teil")
       console.log(spielerAmTisch)
       res
