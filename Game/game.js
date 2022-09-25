@@ -107,13 +107,13 @@ game.post('/start', (req, res) => {
 
 game.post('/wuerfeln',(req,res)=>{
   //ist der Spieler dran?
-  if(req.body.spielername == spielTisch.aktSpieler.spielername){
+  if(req.body.spielerID == spielTisch.aktSpieler.token){
     //ja, ist dran
     let x = wuerfelWerte[Math.floor((Math.random() * wuerfelWerte.length))]
     console.log("wuerfel wert: "+x)
   
     spielTisch.setAktWuerfelWert(x)
-    res.status(200).send({"messageToOne": "Du hast "+ spielTisch.aktWuerfelWert + "gewürfelt",
+    res.status(200).send({"messageToOne": "Du hast "+ spielTisch.aktWuerfelWert + " gewürfelt",
     "messageToAll": "Spieler "+spielTisch.aktSpieler.spielername+" würfelt gerade."})
   }
   else{
@@ -124,7 +124,7 @@ game.post('/wuerfeln',(req,res)=>{
 
 game.post('/behaupten',(req,res)=>{
   //ist der Spieler dran?
-  if(req.body.spielername == spielTisch.aktSpieler.spielername){
+  if(req.body.spielerID == spielTisch.aktSpieler.token){
     //ja, ist dran
     spielTisch.setBehauptung(req.body.data)
     let outputMessage =  "Spieler "+spielTisch.aktSpieler.spielername + " hat " + spielTisch.aktBehauptung + " gesagt! "
@@ -140,7 +140,7 @@ game.post('/behaupten',(req,res)=>{
 
 game.post('/challenge',(req,res)=>{
   //ist der Spieler dran?
-  if(req.body.spielername == spielTisch.aktSpieler.spielername){
+  if(req.body.spielerID == spielTisch.aktSpieler.token){
     //ja, ist dran
 
     let aktBehauptungsIndex = wuerfelWerte.findIndex(wuerfelWert => wuerfelWert == spielTisch.aktBehauptung)
