@@ -11,7 +11,7 @@ router.get('/', ensureGuest, (req, res) => {
     })
 })
 
-//@desc Login/maexchen
+//@desc Main/maexchen
 // @route GET /maexchen
 router.get('/user/:id', ensureAuth, (req, res) => {
     res.render('maexchen', {
@@ -20,8 +20,19 @@ router.get('/user/:id', ensureAuth, (req, res) => {
     })
 })
 
+//@desc Full Lobby/lobby
+// @route GET /lobby
 router.get('/lobby', ensureAuth, (req, res) => {
     res.render('lobby', {
+        name: req.user.firstName,
+        id: req.user.googleId,
+    })
+})
+
+//@desc Failure Page/failure
+// @route GET /failure
+router.get('/failure', ensureAuth, (req, res) => {
+    res.render('failure', {
         name: req.user.firstName,
         id: req.user.googleId,
     })
