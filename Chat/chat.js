@@ -18,44 +18,39 @@ app.get("/", (req,res) =>{
     let spielername = req.query.spielername
     let id = req.query.id
 
-    try {     
-        mongoose.connect(process.env.MONGO_URI)
-        User.findOne({googleId: id}, function (err, docs) {
-            if (err){
-                //redirect to google login
-                res.redirect("http://localhost:3005/failure")
-                console.log("Fehler in der Verbindung zwischen Mongoose und der Anwendung!")
+    mongoose.connect(process.env.MONGO_URI)
+    User.findOne({googleId: id}, function (err, docs) {
+        if (err){
+            //redirect to google login
+            res.redirect("http://localhost:3005/failure")
+            console.log("Fehler in der Verbindung zwischen Mongoose und der Anwendung!")
+        }
+        else{
+            if(docs){
+                console.log("Result : ", docs);
+                let joinAntwort = makePostRequestWithParam("/join", {spielername:spielername, spielerID : id})
+                joinAntwort
+                .then((response) => {
+                    //der spieler tritt einem noch nicht gestarteten spiel bei
+                    console.log(JSON.parse(response).messageToOne)
+                    if( "Spiel bereits gestartet. Kein Betritt möglich!" == JSON.parse(response).messageToOne) {
+                        res.redirect("http://localhost:3005/lobby")
+                    }
+                    else{
+                        res.render('spieler',{spielername:spielername, spielerID : id});
+                    }
+                })
+                .catch((response) => {
+                    let err = JSON.parse(response).messageToOne;
+                    //res.redirect(302,"http://localhost:3005/")
+                    console.log(err)
+                })
             }
             else{
-                if(docs){
-                    console.log("Result : ", docs);
-                    let joinAntwort = makePostRequestWithParam("/join", {spielername:spielername, spielerID : id})
-                    joinAntwort
-                    .then((response) => {
-                        //der spieler tritt einem noch nicht gestarteten spiel bei
-                        console.log(JSON.parse(response).messageToOne)
-                        if( "Spiel bereits gestartet. Kein Betritt möglich!" == JSON.parse(response).messageToOne) {
-                            res.redirect("http://localhost:3005/lobby")
-                        }
-                        else{
-                            res.render('spieler',{spielername:spielername, spielerID : id});
-                        }
-                    })
-                    .catch((response) => {
-                        let err = JSON.parse(response).messageToOne;
-                        //res.redirect(302,"http://localhost:3005/")
-                        console.log(err)
-                    })
-                }
-                else{
-                    res.redirect(302,"http://localhost:3005/")
-                }
+                res.redirect(302,"http://localhost:3005/")
             }
-        });   
-    } catch (error) {
-        res.redirect("http://localhost:3005/failure")
-        console.log(error)
-    }
+        }
+    });   
 
 })
 
