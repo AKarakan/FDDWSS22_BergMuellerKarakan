@@ -22,7 +22,7 @@ app.get("/", (req,res) =>{
     User.findOne({googleId: id}, function (err, docs) {
         if (err){
             //redirect to google login
-            //res.redirect(302,"http://localhost:3005/")
+            res.redirect("http://localhost:3005/")
             console.log("Fehler in der Verbindung zwischen Mongoose und der Anwendung!")
         }
         else{
