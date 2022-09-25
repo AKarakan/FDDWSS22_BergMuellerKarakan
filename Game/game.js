@@ -72,7 +72,8 @@ game.post('/join',(req,res) => {
       console.log(spielerAmTisch)
       res
       .status(200)
-      .send({"messageToAll": "Spieler/in "+ spielername + " nimm jetzt am Spiel teil"})
+      .send({"messageToAll": "Spieler/in "+ spielername + " nimm jetzt am Spiel teil.",
+        "messageToOne": "DU nimmst jetzt am Spiel teil."})
     }
     else{
       res.status(400).send({"messageToOne": "Spieler/in "+spielername+" nimmt schon teil!"})
@@ -90,7 +91,8 @@ game.post('/start', (req, res) => {
   if(spielerAmTisch.length < 3){
     res
     .status(409)
-    .send({"messageToAll": "Das Spiel kann nicht gestartet werden. Es sind nicht genügend Spieler anwesend! "})
+    .send({"messageToAll": "Das Spiel kann nicht gestartet werden. Es sind nicht genügend Spieler anwesend! ",
+    "messageToOne":  "Das Spiel kann nicht gestartet werden. Es sind nicht genügend Spieler anwesend! "})
   }
   else{
     spielGestartet = true
@@ -101,7 +103,8 @@ game.post('/start', (req, res) => {
     
     res
     .status(200)
-    .send({"messageToAll": "Das Spiel startet! Spieler: "+ spielTisch.aktSpieler.spielername+" ist dran!"})
+    .send({"messageToAll": "Das Spiel startet! Spieler: "+ spielTisch.aktSpieler.spielername+" ist dran!",
+    "messageToOne":  "Das Spiel startet! Spieler: "+ spielTisch.aktSpieler.spielername+" ist dran!"})
   }
 })
 
