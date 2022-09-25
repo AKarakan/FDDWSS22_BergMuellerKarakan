@@ -3,7 +3,6 @@ const router = express.Router()
 const mongoose = require('mongoose')
 const { ensureAuth, ensureGuest } = require('../middleware/auth')
 
-//@desc Login/Landing page
 // @route GET /
 router.get('/', ensureGuest, (req, res) => {
     res.render('login', {
@@ -11,7 +10,6 @@ router.get('/', ensureGuest, (req, res) => {
     })
 })
 
-//@desc Main/maexchen
 // @route GET /maexchen
 router.get('/user/:id', ensureAuth, (req, res) => {
     res.render('maexchen', {
@@ -20,7 +18,6 @@ router.get('/user/:id', ensureAuth, (req, res) => {
     })
 })
 
-//@desc Full Lobby/lobby
 // @route GET /lobby
 router.get('/lobby', ensureAuth, (req, res) => {
     res.render('lobby', {
@@ -29,7 +26,6 @@ router.get('/lobby', ensureAuth, (req, res) => {
     })
 })
 
-//@desc Failure Page/failure
 // @route GET /failure
 router.get('/failure', ensureAuth, (req, res) => {
     res.render('failure', {
